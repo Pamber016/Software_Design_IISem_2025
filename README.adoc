@@ -1,0 +1,29 @@
+= Repositorio de Diseño de Software -  II Semestre 2025
+:experimental:
+:nofooter:
+:source-highlighter: pygments
+:sectnums:
+:stem: latexmath
+:toc: auto
+:toclevels: 1
+:xrefstyle: short
+
+== General info.
+* Universida de Costa Rica
+* CI-0136 Diseño de Software
+* *Docente:* Daniel Salazar Mora
+* *Estudiante:* Amber Villarreal Campos C28481
+* II Semester, 2025
+
+== Description
+Este repositorio personal fue creado por la estudiante Amber Villarreal Campos como parte del curso _CI-0136 Diseño de Software_, impartido por el docente Daniel Salazar Mora, durante el segundo ciclo del 2025, de la *Escuela de Ciencias de la Computación e Informática* de la *Universidad de Costa Rica*.
+
+Se contienen las entregas individuales realizadas durante el curso, así como apuntes relacionados al mismo.
+
+== Índice
+
+=== Homeworks
+|===
+|Actividad | Descripción
+|Tarea 2: Refactorización de Código| Refactorizar el sistema de gestión de biblioteca aplicando buenas prácticas de ingeniería de software vistas en el curso. 
+|===
