@@ -9,19 +9,16 @@ class Libro:
         self.disponible = disponible
 
     def calcular_popularidad(self):
-        if self.genero == 'novela':
-            base = 50
-            extra = self.paginas / 10
-        elif self.genero == 'ciencia':
-            base = 70
-            extra = self.paginas / 5
-        elif self.genero == 'historia':
-            base = 40
-            extra = self.paginas / 8
-        else:
-            base = 10
-            extra = 0
-        return base + extra
+        lista_generos = {
+            'novela': {'base': 50, 'divisor': 10},
+            'ciencia': {'base': 70, 'divisor': 5},
+            'historia': {'base': 40, 'divisor': 8}
+        }
+
+        valor = lista_generos.get(self.genero, {'base': 10, 'divisor': 1})
+        
+        popularidad = valor['base'] + (self.paginas / valor['divisor'])
+        return popularidad
 
     def es_antiguo(self):
         if self.anio_publicacion < 1980:

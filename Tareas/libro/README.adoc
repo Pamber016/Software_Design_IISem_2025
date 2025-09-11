@@ -1,0 +1,159 @@
+= Tarea 2 - Refactorización de Código
+:experimental:
+:nofooter:
+:source-highlighter: pygments
+:sectnums:
+:stem: latexmath
+:toc: auto
+:toclevels: 1
+:xrefstyle: short
+
+== Separación de asuntos: Función `agregar_libro`
+* *Problema identificado:* No existe una separación de asuntos en `agregar_libro` entre agregar el libro y la interacción con el usuario.
+``` python
+def agregar_libro(self):
+    titulo = input("Título: ")
+    autor = input("Autor: ")
+    genero = input("Género (novela/ciencia/historia): ").lower()
+    paginas = int(input("Número de páginas: "))
+    anio = int(input("Año de publicación: "))
+    l = Libro(titulo, autor, genero, paginas, anio)
+    self.libros.append(l)
+    print("Libro agregado!")
+```
+* *Solución implementada:* Separación de asuntos por medio de una nueva función que se encarga de manejar el input del usuario llamada `solicitar_datos_libro`:
+``` python
+def solicitar_datos_libro(self):
+    titulo = input("Título: ")
+    autor = input("Autor: ")
+    genero = input("Género (novela/ciencia/historia): ").lower()
+    paginas = int(input("Número de páginas: "))
+    anio = int(input("Año de publicación: "))
+    return titulo, autor, genero, paginas, anio
+```
+Las buenas prácticas aplicadas incluye el uso de nombres significativos para las funciones y separación del frontend y backend.
+
+== Manejo de excepciones
+* *Problema identificado:* Otro error identificado en la función de `agregar_libro` se transfiere a `solicitar_datos_libro`: *No existe un manejo de errores* en caso de que el usuario realice un input que no coincide con un tipo integer.
+* *Solución implementada:* Se realiza otra función encargada de identificar y manejar estos errores.
+
+``` python
+def solicitar_datos_libro(self):
+    # ...
+    paginas = self.solicitar_numero("Número de páginas: ")
+    anio = self.solicitar_numero("Año de publicación: ")
+
+def solicitar_numero(self, mensaje):
+    while True:
+        try:
+            return int(input(mensaje))
+        except ValueError:
+            print("Error: Debe ingresar un número válido.")
+```
+
+Las buenas prácticas de programación incluye el uso de nombres significativos, el manejo de errores por medio de excepciones adecuadas, el uso de try catch y separación de asuntos.
+
+== Separación de asuntos: Función `generar_reporte`
+* *Problema identificado:* En esta función se puede observar de nuevo que se realizan múltiples tareas.
+
+``` python
+def generar_reporte(self):
+    total = len(self.libros)
+    antiguos = 0
+    disponibles = 0
+    popularidad_total = 0
+    for l in self.libros:
+        l.imprimir_datos()
+        if l.es_antiguo():
+            antiguos += 1
+        if l.disponible:
+            disponibles += 1
+        popularidad_total += l.calcular_popularidad()
+
+    print("\nREPORTE BIBLIOTECA:")
+    print(f"Total libros: {total}")
+    print(f"Disponibles: {disponibles}")
+    print(f"Antiguos: {antiguos}")
+    print(f"Promedio de popularidad: \
+        {popularidad_total / total if total > 0 else 0}")
+```
+
+* *Solución implementada:* Se realiza una separación de las distintas tareas que se realizan en esta sola función:
+
+Para empezar, ahora `generar_reporte` solamente hace un llamado a dos funciones, una para imprimir los libros (el `for` que recorre cada libro e imprime sus datos) y otra que muestra las estadísticas del reporte, en la cual se indaga más adelante.
+
+``` python
+def generar_reporte(self):
+    self.imprimir_libros()
+    self.mostrar_estadisticas()
+
+def imprimir_libros(self):
+    for libro in self.libros:
+        libro.imprimir_datos()
+```
+
+== Modularización de mostrar estadísticas
+* *Problema identificado:* Relacionado al problema anterior, deberían existir funciones específicas para calcular todas las estadísticas, esto con el objetivo de que el mantenimiento y testeo del código sea más fácil.
+
+* *Solución implementada:*
+
+``` python
+def mostrar_estadisticas(self):
+    total = len(self.libros)
+    antiguos = self.calcular_antiguos()
+    disponibles = self.calcular_disponibles()
+    promedio_popularidad = self.calcular_promedio_popularidad(total)
+
+    print("\nREPORTE BIBLIOTECA:")
+    print(f"Total libros: {total}")
+    print(f"Disponibles: {disponibles}")
+    print(f"Antiguos: {antiguos}")
+    print(f"Promedio de popularidad: {promedio_popularidad}")
+
+def calcular_antiguos(self):
+    return sum(1 for libro in self.libros if libro.es_antiguo())
+
+def calcular_disponibles(self):
+    return sum(1 for libro in self.libros if libro.disponible)
+
+def calcular_promedio_popularidad(self,total):
+    popularidad_total = sum(libro.calcular_popularidad() \
+        for libro in self.libros)
+    return popularidad_total / total if total > 0 else 0
+```
+Se encuentra un uso de nombres significativos para cada función, así mismo, es simple, manteniendo su legibilidad, cada función es corta y cumple con una sola tarea (*Principio de Responsabilidad Única*)
+
+== Anti-patrón de diseño: Else if en función `calcular popularidad`
+* *Problema identificado:* La función `calcular_popularidad` contiene un anti-patrón bastante común, una lista de `elif` que vuelve el código más complejo a futuro para su escalabilidad y legibilidad.
+``` python
+def calcular_popularidad(self):
+    if self.genero == 'novela':
+        base = 50
+        extra = self.paginas / 10
+    elif self.genero == 'ciencia':
+        base = 70
+        extra = self.paginas / 5
+    elif self.genero == 'historia':
+        base = 40
+        extra = self.paginas / 8
+    else:
+        base = 10
+        extra = 0
+    return base + extra
+```
+
+* *Solución implementada:* Se plantea el uso de un `diccionario` para eliminar el `if`, permitiendo un código más legible. En caso de que el género no se encuentre en el diccionario, se utilizan los valores dados por defecto, igualmente, agregar géneros nuevos es fácil. Así mismo, se deja de realizar un _copy paste_ de los calculos para cada género.
+``` python
+def calcular_popularidad(self):
+    lista_generos = {
+        'novela': {'base': 50, 'divisor': 10},
+        'ciencia': {'base': 70, 'divisor': 5},
+        'historia': {'base': 40, 'divisor': 8}
+    }
+
+    valor = lista_generos.get(self.genero, {'base': 10, 'divisor': 1})
+
+    popularidad = valor['base'] + (self.paginas / valor['divisor'])
+    return popularidad
+```
+De esta forma, se elimina el anti-patrón, se elimina la repetición y se mejora la escalabilidad, claridad y legibilidad del códgio.
