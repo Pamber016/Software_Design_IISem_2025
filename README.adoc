@@ -24,6 +24,6 @@ Se contienen las entregas individuales realizadas durante el curso, así como ap
 
 === Homeworks
 |===
-|Actividad | Descripción
-|Tarea 2: Refactorización de Código| Refactorizar el sistema de gestión de biblioteca aplicando buenas prácticas de ingeniería de software vistas en el curso. 
+|Actividad | Descripción | Link
+|Tarea 2: Refactorización de Código| Refactorizar el sistema de gestión de biblioteca aplicando buenas prácticas de ingeniería de software vistas en el curso.| link:Tareas/libro[Tarea 2]
 |===
