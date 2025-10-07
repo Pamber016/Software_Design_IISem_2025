@@ -1,0 +1,96 @@
+= Tarea 3: Sistema de Pedidos de Comida con Concurrencia
+:experimental:
+:nofooter:
+:source-highlighter: pygments
+:sectnums:
+:stem: latexmath
+:toc: auto
+:toclevels: 2
+:xrefstyle: short
+
+== Introducción
+Esta tarea implementa un sistema de gestión de pedidos de comida que utiliza el patrón de diseño *Factory Method* junto con técnicas de programación concurrente para procesar múltiples pedidos simultáneamente. El sistema simula un restaurante donde clientes realizan pedidos de diferentes tipos (hamburguesas y pizzas) y cocineros (hilos independientes) procesan estos pedidos concurrentemente.
+
+== Diseño de la Tarea
+
+=== Modelos
+
+La clase abstracta `*Pedido*` contiene un método llamado `procesar()` que es sobrescrito por los modelos `*Hamburguesa*` y `*Pizza*`.
+
+.Ejemplo de implementación:
+``` python
+async def procesar(self):
+    # Simular tiempo de preparación
+    tiempo_preparacion = random.uniform(2, 4)
+    await asyncio.sleep(tiempo_preparacion)
+    return f"Pizza {self.id_pedido} preparada"
+```
+
+Como se observa, se espera un tiempo random uniforme para simular el tiempo de preparación de la pizza. El modelo de hamburguesa es exactamente igual, cambiando el tiempo.
+
+=== Factories
+La superclase creadora llamada `*CreadorPedidos*` tiene un método abstracto llamado `crear_pedido(id_pedido)` que sobreescriben `*CreadorHamburguesas*` y `*CreadorPizzas*`.
+
+.Ejemplo de Factory:
+``` python
+class CreadorHamburguesas(CreadorPedidos):
+    def crear_pedido(self, id_pedido):
+        return Hamburguesa(id_pedido)
+```
+
+Este patrón permite:
+
+* Extender fácilmente el sistema con nuevos tipos de pedidos
+* Mantener el principio de open/closed
+* Centralizar la lógica de creación de objetos
+
+=== Service: Servicio de Pedidos
+Esta clase provee la lógica concurrente del sistema de pedidos de comida.
+
+.Métodos
+* `agregar_pedido(pedido)`: Ingresa el pedido a la cola de pedidos thread-safe.
+* `_cocinero_worker(id_cocinero)`: Toma los pedidos de la cola, simula su tiempo de preparación y marca el pedido como completado.
+* `procesar_pedidos()`: Inicia los hilos cocineros y coordina el procesamiento de todos los pedidos.
+
+.Implementación de Sincronización:
+[source,python]
+----
+def _cocinero_worker(self, id_cocinero):
+    while True:
+        try:
+            pedido = self.cola_pedidos.get(timeout=1)
+            # Procesar pedido...
+            self.cola_pedidos.task_done()
+            
+            with self.lock:
+                self.pedidos_procesados += 1
+                if self.pedidos_procesados >= self.total_pedidos:
+                    self.evento_todos_procesados.set()
+        except:
+            break
+----
+
+*Importante*: Se utiliza un `Lock` para proteger el contador de pedidos procesados y evitar _condiciones de carrera_ cuando múltiples hilos intentan modificar la variable simultáneamente.
+
+== Salida Esperada
+
+.Ejecución
+[source,bash]
+----
+~/FactoryAsync/src$ python3 main.py
+----
+
+.Ejemplo de ejecución:
+[source,bash]
+----
+Iniciando procesamiento de pedidos...
+[COCINERO 1] Preparando pedido 0 (Hamburguesa)
+[COCINERO 2] Preparando pedido 1 (Hamburguesa)
+[COCINERO 1] Pedido 0 listo: Hamburguesa 0 preparada
+[COCINERO 1] Preparando pedido 2 (Pizza)
+[COCINERO 2] Pedido 1 listo: Hamburguesa 1 preparada
+[COCINERO 2] Preparando pedido 3 (Pizza)
+[COCINERO 1] Pedido 2 listo: Pizza 2 preparada
+[COCINERO 2] Pedido 3 listo: Pizza 3 preparada
+[sistema] Todos los pedidos procesados
+----

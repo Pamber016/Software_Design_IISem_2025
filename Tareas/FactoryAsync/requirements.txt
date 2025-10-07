@@ -1,0 +1,2 @@
+# No se necesitan dependencias externas para este proyecto
+# Python 3.6+ con librerías estándar
