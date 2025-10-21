@@ -1,0 +1,33 @@
+= Lab 4 - Pruebas Unitarias y CI/CD
+:experimental:
+:nofooter:
+:source-highlighter: pygments
+:sectnums:
+:stem: latexmath
+:toc: auto
+:toclevels: 1
+:xrefstyle: short
+
+== CI/CD Configuración
+Se ha configurado un pipeline de CI/CD utilizando GitHub Actions. El pipeline se activa en cada push y pull request hacia la rama `main`.
+
+== Extensión del sistema
+
+Se ha implementado un sistema de magia en el juego de rol para incluir una nueva funcionalidad de curación:
+
+* Se ha creado la clase Wizard que hereda de Character y tiene un atributo adicional de maná.
+* Se han creado las clases `HealingSystem` y `IHealingSystem` para manejar la lógica de curación, aplicando el principio de inyección de dependencias para facilitar las pruebas unitarias.
+* Se ha creado la clase MagicWand que implementa la interfaz Weapon y la nueva interfaz IHealingSystem.
+
+== Pruebas Unitarias
+Se han implementado pruebas unitarias utilizando el framework `unittest` de Python para verificar el correcto funcionamiento de la nueva funcionalidad de magia y curación, así como la integración con el sistema existente de combate.
+
+Las pruebas cubren los siguientes casos:
+
+* Inyección de dependencias en el sistema de curación.
+* Curación exitosa de un personaje herido.
+* Intento de curación de un personaje muerto.
+* Verificación del consumo de maná al curar.
+* Verificación de que la varita mágica también puede atacar.
+
+Las pruebas se encuentran en el archivo `tests/test_magic_system.py` y se ejecutan automáticamente en el pipeline de CI/CD.
