@@ -20,4 +20,5 @@ jobs:
     
     - name: Run tests
       run: |
+        cd Lab4
         python3 -m unittest discover -v .
