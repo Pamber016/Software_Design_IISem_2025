@@ -1,0 +1,20 @@
+= Quiz 2: Factory Method
+:experimental:
+:nofooter:
+:source-highlighter: pygments
+:sectnums:
+:stem: latexmath
+:toc: auto
+:toclevels: 1
+:xrefstyle: short
+
+== Descripción
+Se presenta un ejemplo de implementación del patrón de diseño *Factory Method* en un sistema de reservas de vuelos. El patrón permite crear objetos de diferentes métodos de pago (PayPal, Tarjeta de Crédito, Transferencia Bancaria) sin acoplar el código a las clases concretas de los métodos de pago.
+
+== Estructura del Código
+El código está organizado en las siguientes secciones:
+
+1. **Interfaz del Producto**: Define la interfaz común para los métodos de pago.
+2. **Productos Concretos**: Implementaciones específicas de los métodos de pago.
+3. **Fábrica**: Clase que contiene el método de Factory para crear instancias de los métodos de pago.
+4. **Uso en el Sistema de Reservas**: Ejemplo de cómo utilizar Factory para procesar pagos en el sistema de reservas.

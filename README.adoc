@@ -34,3 +34,9 @@ Se contienen las entregas individuales realizadas durante el curso, así como ap
 |Actividad | Descripción | Link
 |Lab 4: Pruebas Unitarias y CI/CD| Implementación de pruebas unitarias y configuración de CI/CD para un sistema de magia en un juego de rol.| link:Lab4/README.adoc[Lab 4: README]
 |===
+
+=== Quices
+|===
+|Actividad | Descripción | Link
+|Quiz 2: Factory Method| Ejemplo de implementación del patrón de diseño Factory Method en un sistema de reservas de vuelos.| link:Quices/Quiz2/README.adoc[Quiz 2: README]
+|===
