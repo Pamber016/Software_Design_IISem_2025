@@ -1,0 +1,17 @@
+= Tarea 4 - Simulación de Cafetería
+:experimental:
+:nofooter:
+:source-highlighter: pygments
+:sectnums:
+:stem: latexmath
+:toc: auto
+:toclevels: 2
+:xrefstyle: short
+
+== Descripción
+
+== Estructura del trabajo
+
+=== Patrones de Diseño Utilizados
+
+== Buenas Prácticas Aplicadas

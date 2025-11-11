@@ -27,6 +27,7 @@ Se contienen las entregas individuales realizadas durante el curso, así como ap
 |Actividad | Descripción | Link
 |Tarea 2: Refactorización de Código| Refactorizar el sistema de gestión de biblioteca aplicando buenas prácticas de ingeniería de software vistas en el curso.| link:Tareas/libro[Tarea 2]
 |Tarea 3: Factory Async| Sistema concurrente de gestión de pedidos de comida con patrón de diseño factory| link:Tareas/FactoryAsync/README.adoc[Tarea 3: README]
+|Tarea 4: Cafetería| PENDING... | link:Tareas/Cafeteria/README.adoc[Tarea 4: README]
 |===
 
 === Labs
