@@ -8,9 +8,9 @@ class ItemPedido:
         self.producto = producto
         self.cliente = cliente
         self.preparado = False
-    
+
     def marcar_preparado(self):
         self.preparado = True
-    
+
     def __str__(self) -> str:
         return self.producto.get_descripcion()

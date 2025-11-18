@@ -1,6 +1,7 @@
 # Decorator base class for extra ingredients
 from productos.Producto import Producto
 
+
 class IngredienteExtra(Producto):
     def __init__(self, producto: Producto):
         self._producto = producto

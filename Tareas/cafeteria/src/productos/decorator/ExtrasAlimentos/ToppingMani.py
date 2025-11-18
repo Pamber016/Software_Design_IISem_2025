@@ -1,5 +1,6 @@
 from productos.decorator.IngredienteExtra import IngredienteExtra
 
+
 class ToppingMani(IngredienteExtra):
     def __init__(self, producto):
         super().__init__(producto)

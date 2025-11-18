@@ -1,5 +1,6 @@
 from observer.Observer import Observador
 
+
 # Cliente
 class Cliente(Observador):
     def __init__(self, nombre: str):
