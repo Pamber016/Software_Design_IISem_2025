@@ -10,5 +10,5 @@ class ToppingChocolate(IngredienteExtra):
     def get_descripcion(self):
         return f"{self._producto.get_descripcion()}, {self.descripcion_extra}"
 
-    def get_costo(self):
-        return self._producto.get_costo() + self.costo_extra
+    def get_precio(self):
+        return self._producto.get_precio() + self.costo_extra
