@@ -19,7 +19,6 @@ class BaristaHandler(HandlerPedido):
         if self._es_bebida(item.producto):
             print(f"[Barista]: Preparo bebida: {item.producto.get_descripcion()}")
             item.marcar_preparado()
-            return True
-        elif self._siguiente:
+        if self._siguiente:
             return self._siguiente.manejar(item)
-        return False
+        return True

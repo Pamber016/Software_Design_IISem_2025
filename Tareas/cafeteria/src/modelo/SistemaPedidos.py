@@ -17,8 +17,8 @@ class SistemaPedidos(Subject):
         self.pastelero = PasteleroHandler()
         self.notificador = NotificadorHandler(self)
 
-        # Configurar cadena: Barista -> Pastelero -> Notificador
-        self.barista.set_siguiente(self.pastelero).set_siguiente(self.notificador)
+        self.barista.set_siguiente(self.pastelero)
+        self.pastelero.set_siguiente(self.notificador)
 
     def agregar_pedido(self, producto: Producto, cliente: Cliente):
         item = ItemPedido(producto, cliente)
@@ -33,4 +33,4 @@ class SistemaPedidos(Subject):
             self.barista.manejar(pedido)
 
     def notificar_cliente(self, cliente: Cliente, mensaje: str):
-        self.notificar_observadores(mensaje)
+        cliente.actualizar(mensaje)
