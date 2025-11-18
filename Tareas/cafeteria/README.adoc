@@ -10,8 +10,191 @@
 
 == Descripción
 
-== Estructura del trabajo
+La tarea implementa un sistema completo de gestión de pedidos para una cafetería, permitiendo la creación, personalización, preparación y notificación de pedidos mediante la aplicación de patrones de diseño.
 
-=== Patrones de Diseño Utilizados
+.Funcionalidades principales:
+. *Creación de pedidos* con bebidas (café, té, espresso) y alimentos (croissants, tostadas, brownies)
+. *Personalización* ilimitada de productos mediante ingredientes extras
+. *Procesamiento automatizado* de pedidos según el tipo de producto
+. *Notificación* a clientes cuando sus pedidos están listos
+
+== Patrones de Diseño Utilizados
+
+=== Decorator
+
+*Propósito:* Permitir la personalización dinámica de productos con ingredientes extras sin modificar las clases base, manteniendo la flexibilidad para combinaciones ilimitadas y  adherencia al principio de abierto/cerrado.
+
+[source, python]
+----
+# Clase base abstracta
+class Producto(ABC):
+    @abstractmethod
+    def get_descripcion(self) -> str: pass
+    @abstractmethod
+    def get_precio(self) -> float: pass
+
+# Decorator base
+class IngredienteExtra(Producto):
+    def __init__(self, producto: Producto):
+        self._producto = producto
+
+# Decoradores concretos
+class Leche(IngredienteExtra):
+    def get_descripcion(self) -> str:
+        return f"{self._producto.get_descripcion()}, con leche"
+----
+
+.Ventajas
+* Open/Closed Principle: Se pueden agregar nuevos ingredientes sin modificar código existente
+* Flexibilidad: Combinaciones ilimitadas de personalización
+* Mantenibilidad: Cada ingrediente tiene su propia clase responsable
+
+=== Chain of Responsibility
+
+*Propósito:* Manejar el procesamiento de diferentes tipos de pedidos a través de una cadena de handlers especializados, desacoplando el emisor de los receptores.
+
+[source, python]
+----
+# Handler abstracto
+class HandlerPedido(ABC):
+    def __init__(self):
+        self._siguiente: Optional[HandlerPedido] = None
+    
+    def set_siguiente(self, siguiente: HandlerPedido) -> HandlerPedido:
+        self._siguiente = siguiente
+        return siguiente
+
+# Handlers concretos
+class BaristaHandler(HandlerPedido):
+    def manejar(self, item: ItemPedido) -> bool:
+        if self._es_bebida(item.producto):
+            # Preparar bebida
+            if self._siguiente:
+                return self._siguiente.manejar(item)
+        return False
+----
+
+.Ventajas
+* Single Responsibility: Cada handler tiene una única responsabilidad
+* Bajo acoplamiento: Los handlers no conocen entre sí
+* Extensibilidad: Fácil agregar nuevos handlers
+
+=== Observer
+*Propósito:* Notificar a los clientes cuando sus pedidos están listos, permitiendo una comunicación eficiente entre el sistema de pedidos y los clientes.
+
+[source, python]
+----
+# Subject
+class Subject(ABC):
+    def __init__(self):
+        self._observadores: List[Observador] = []
+    
+    def agregar_observador(self, observador: Observador):
+        self._observadores.append(observador)
+    
+    def notificar_observadores(self, mensaje: str):
+        for observador in self._observadores:
+            observador.actualizar(mensaje)
+
+# Observer
+class Cliente(Observador):
+    def actualizar(self, mensaje: str):
+        print(f"Notificación para {self.nombre}: {mensaje}")
+
+class SistemaPedidos(Subject):
+    def notificar_cliente(self, cliente: Cliente, mensaje: str):
+        cliente.actualizar(mensaje)
+----
+
+.Ventajas
+* Notificaciones automáticas: Los clientes reciben actualizaciones en tiempo real
+* Desacoplamiento: El sistema no depende de implementaciones específicas de clientes
+* Escalabilidad: Fácil agregar múltiples observadores
+
+== Estructura del Proyecto
+
+La integración de los patrones sigue una estructura clara:
+* *Decorator* construye productos personalizados según solicitud del cliente
+* *Chain of Responsibility* procesa los productos a través de handlers especializados
+* *Observer* notifica el estado final a los clientes interesados
+
+Como se observa, cada patrón cumple un rol específico dentro del sistema, colaborando para ofrecer una solución robusta y flexible a la gestión de pedidos en la cafetería.
+
+Dentro del código, las clases y métodos están organizados para reflejar esta arquitectura, asegurando que cada componente interactúe de manera coherente con los demás:
+
+.Lista de componentes principales:
+* `Producto` y sus decoradores para la personalización.
+* Handlers como `BaristaHandler`, `PanaderoHandler` y `NotificadorHandler` para el procesamiento de pedidos.
+* `SistemaPedidos` como el sujeto que maneja las notificaciones a los clientes.
+
+Esta arquitectura modular facilita la mantenibilidad y escalabilidad del sistema, permitiendo futuras extensiones sin afectar las funcionalidades existentes.
 
 == Buenas Prácticas Aplicadas
+
+=== Principios SOLID
+. Single Responsibility Principle
+    * BaristaHandler: Solo prepara bebidas
+    * PasteleroHandler: Solo prepara alimentos
+    * NotificadorHandler: Solo maneja notificaciones
+    * Cada decorador: Solo agrega un ingrediente específico
+. Open/Closed Principle
+    * Nuevos ingredientes pueden añadirse como nuevos decoradores sin modificar los existentes
+    * Nuevos tipos de handlers pueden añadirse sin alterar los existentes
+. Liskov Substitution Principle
+    * Todos los productos e ingredientes pueden ser sustituidos por sus clases base `Producto` e `IngredienteExtra`.
+. Interface Segregation Principle
+    * Interfaces pequeñas y específicas para productos y handlers.
+. Dependency Inversion Principle
+    * Los handlers dependen de abstracciones (`Producto`, `HandlerPedido`, `Observer`) en lugar de implementaciones concretas.
+
+=== Clean Code
+
+Se mantienen nombres cortos y significativos para cada una de las clases y sus métodos. Así mismo, dichos métodos son cortos y enfocados.
+
+=== Organización
+
+El código se divide en carpetas con objetivos específicos, manteniendo la claridad y organización. Así mismo, mediante `__init__.py` se mantienen una organización limpia de los imports, que permite agregar nuevos ingredientes extras, alimentos y bebidas, sin tener que modificar los imports de manera significativa en el resto del código.
+
+== Ejemplo de ejecución
+
+[source, Python]
+----
+# Configuración del sistema
+sistema = SistemaPedidos()
+ana = Cliente("Ana")
+carlos = Cliente("Carlos")
+
+# Pedidos personalizados
+cafe_ana = Leche(Canela(Cafe()))
+croissant_ana = RellenoChocolate(Croissant())
+cafe_carlos = Crema(Espresso())
+
+# Procesamiento
+sistema.agregar_pedido(cafe_ana, ana)
+sistema.agregar_pedido(croissant_ana, ana)
+sistema.agregar_pedido(cafe_carlos, carlos)
+sistema.procesar_pedidos()
+----
+
+*Salida esperada:*
+
+[source, bash]
+----
+=== Simulación de cafetería ===
+
+Cliente: Ana
+Ordena un Cafe, con canela, con leche
+Cliente: Ana
+Ordena un Croissant, con relleno de chocolate
+Cliente: Carlos
+Ordena un Café Doble Espresso, con crema
+
+--- Procesando pedidos ---
+[Barista]: Preparo bebida: Cafe, con canela, con leche
+Notificación para Ana: Su pedido 'Cafe, con canela, con leche' está listo! Precio total: $1501.50
+[Pastelero]: Preparo alimento: Croissant, con relleno de chocolate
+Notificación para Ana: Su pedido 'Croissant, con relleno de chocolate' está listo! Precio total: $1500.85
+[Barista]: Preparo bebida: Café Doble Espresso, con crema
+Notificación para Carlos: Su pedido 'Café Doble Espresso, con crema' está listo! Precio total: $2500.75
+----
+
