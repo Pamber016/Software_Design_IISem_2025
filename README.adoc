@@ -34,6 +34,7 @@ Se contienen las entregas individuales realizadas durante el curso, así como ap
 |===
 |Actividad | Descripción | Link
 |Lab 4: Pruebas Unitarias y CI/CD| Implementación de pruebas unitarias y configuración de CI/CD para un sistema de magia en un juego de rol.| link:Lab4/README.adoc[Lab 4: README]
+|Lab 5: Repaso para el Examen Final| Simulacro de repaso para el examen|link:Lab5/README.adoc[Lab 5: README]
 |===
 
 === Quices
