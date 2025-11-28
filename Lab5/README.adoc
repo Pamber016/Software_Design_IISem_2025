@@ -214,9 +214,9 @@ Tarifa final: 1970 colones
 Utilizaría el patrón decorator para aplicar los distintos descuentos y tarifas de forma dinámica.
 
 Código completo en:
-link:https://github.com/Pamber016/Software_Design_IISem_2025[Repositorio de Diseño de Software - II Semeneste 2025]
+link:https://github.com/Pamber016/Software_Design_IISem_2025[Repositorio de Diseño de Software - II Semestre 2025]
 
-* POC en Python:*
+*POC en Python:*
 
 Se establece un decorador base `tarifaDecorator` y luego se crean decoradores específicos para cada tipo de descuento, como `studentDecorator` y `greenDecorator`. Estos decoradores envuelven una instancia de `tarifa` y modifican el cálculo de la tarifa según las reglas de negocio.
 
