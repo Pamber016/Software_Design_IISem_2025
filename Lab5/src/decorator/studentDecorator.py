@@ -1,5 +1,6 @@
 from decorator.tarifaDecorator import tarifaDecorator
 
+
 class studentDecorator(tarifaDecorator):
     def __init__(self, tarifa_decorada):
         super().__init__(tarifa_decorada)

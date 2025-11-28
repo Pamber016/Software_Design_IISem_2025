@@ -1,4 +1,4 @@
-from decorator import (basicTarifa, studentDecorator, greenDecorator)
+from decorator import basicTarifa, studentDecorator, greenDecorator
 
 
 def main():
@@ -6,8 +6,8 @@ def main():
 
     # Tarifa base
     tarifa_base = basicTarifa(2450)
-    print(f"Tarifa base total: {tarifa_base.calcular_tarifa()} colones\n") 
-   
+    print(f"Tarifa base total: {tarifa_base.calcular_tarifa()} colones\n")
+
     # Aplicar decoradores
     tarifa_estudiante = studentDecorator(tarifa_base)
     print("Aplicando descuento de estudiante (-15%)")
